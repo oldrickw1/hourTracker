@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity{
     TextView tv_todo;
     boolean isRunning = false;
     int goalInHours = 8;
-    TimeTracker timeTracker;
+    int goalInSeconds = goalInHours * 60 * 60;
 
 
 
@@ -34,30 +34,27 @@ public class MainActivity extends AppCompatActivity{
         tv_current = findViewById(R.id.tv_current);
         tv_todo = findViewById(R.id.tv_todo);
 
-        timeTracker = new TimeTracker();
 
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-                System.out.println("Current time: " );
+                System.out.println("Seconds to do left: " + goalInSeconds--);
 
             }
         };
 
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(timerTask, 0, 60000);
+        Timer countDownTimer = new Timer();
 
         btn_startStop.setOnClickListener(view -> {
             if (isRunning) {
                 // stop
-                timeTracker.stop();
                 isRunning = false;
                 btn_startStop.setText("Start");
                 btn_startStop.setBackgroundColor(getResources().getColor(R.color.green));
 
 
             } else {
-                timeTracker.start();
+                countDownTimer.scheduleAtFixedRate(timerTask, 0, 1000);
                 btn_startStop.setText("Stop");
                 btn_startStop.setBackgroundColor(getResources().getColor(R.color.red));
                 isRunning = true;
