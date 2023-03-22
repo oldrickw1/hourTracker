@@ -35,15 +35,6 @@ public class MainActivity extends AppCompatActivity{
         tv_todo = findViewById(R.id.tv_todo);
 
 
-        TimerTask timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                System.out.println("Seconds to do left: " + goalInSeconds--);
-
-            }
-        };
-
-        Timer countDownTimer = new Timer();
 
         btn_startStop.setOnClickListener(view -> {
             if (isRunning) {
@@ -54,7 +45,10 @@ public class MainActivity extends AppCompatActivity{
 
 
             } else {
-                countDownTimer.scheduleAtFixedRate(timerTask, 0, 1000);
+                Thread t = new Thread(() -> {
+                    System.out.println("Seconds to do left: " + goalInSeconds--);
+                });
+                t.start();
                 btn_startStop.setText("Stop");
                 btn_startStop.setBackgroundColor(getResources().getColor(R.color.red));
                 isRunning = true;
