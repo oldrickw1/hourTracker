@@ -3,9 +3,13 @@ package com.example.hourtracker;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import java.util.Timer;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.TimerTask;
 
 
@@ -21,6 +25,9 @@ public class MainActivity extends AppCompatActivity{
     int goalInSeconds = goalInHours * 60 * 60;
 
 
+    public MainActivity() throws IOException {
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,26 +42,29 @@ public class MainActivity extends AppCompatActivity{
         tv_todo = findViewById(R.id.tv_todo);
 
 
+        btn_startStop.setOnClickListener(this::startOrStop);
+    }
 
-        btn_startStop.setOnClickListener(view -> {
-            if (isRunning) {
-                // stop
-                isRunning = false;
-                btn_startStop.setText("Start");
-                btn_startStop.setBackgroundColor(getResources().getColor(R.color.green));
+    private void startOrStop(View v){
+        if (isRunning) {
+            stop();
+        } else {
+            start();
+        }
+    }
 
+    private void start() {
+        isRunning = true;
+        btn_startStop.setText("Stop");
+        btn_startStop.setBackgroundColor(getResources().getColor(R.color.red));
+        System.out.println("Stopped at: " + System.currentTimeMillis());
+    }
 
-            } else {
-                Thread t = new Thread(() -> {
-                    System.out.println("Seconds to do left: " + goalInSeconds--);
-                });
-                t.start();
-                btn_startStop.setText("Stop");
-                btn_startStop.setBackgroundColor(getResources().getColor(R.color.red));
-                isRunning = true;
-                // start count
-            }
-        });
+    private void stop() {
+        isRunning = false;
+        btn_startStop.setText("Start");
+        btn_startStop.setBackgroundColor(getResources().getColor(R.color.green));
+        System.out.println("Started at: " + System.currentTimeMillis());
     }
 
 
